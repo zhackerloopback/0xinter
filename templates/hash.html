@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}
+Hash Analyzer
+{% endblock %}
+
+{% block content %}
+
+<h1>Hash Analyzer</h1>
+
+<div class="tool-card">
+
+<form method="POST"
+      enctype="multipart/form-data">
+
+    <input type="hidden"
+    name="csrf_token"
+    value="{{ csrf_token() }}">
+    
+    <input
+    type="file"
+    name="file"
+    required>
+
+    <button type="submit">
+        Analyze File
+    </button>
+
+</form>
+
+</div>
+
+{% if hashes %}
+
+<div class="result-card">
+
+<h2>Analysis Result</h2>
+
+<table>
+
+<tr>
+<td>Filename</td>
+<td>{{ hashes.filename }}</td>
+</tr>
+
+<tr>
+<td>MD5</td>
+<td>{{ hashes.md5 }}</td>
+</tr>
+
+<tr>
+<td>SHA1</td>
+<td>{{ hashes.sha1 }}</td>
+</tr>
+
+<tr>
+<td>SHA256</td>
+<td>{{ hashes.sha256 }}</td>
+</tr>
+
+</table>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

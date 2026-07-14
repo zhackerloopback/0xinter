@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+
+{% block title %}
+History
+{% endblock %}
+
+{% block content %}
+
+<h1>📂 Investigation History</h1>
+
+<div class="tool-card">
+
+    <form method="GET">
+    
+    <input
+    type="text"
+    name="q"
+    placeholder="Search Target..."
+    value="{{ request.args.get('q','') }}">
+    
+    <button type="submit">
+    
+    🔍 Search
+    
+    </button>
+    
+    </form>
+    
+    <br>
+    
+    <div class="quick-actions">
+    
+    <a
+    href="/export/csv"
+    class="action-btn">
+    
+    📊 Export CSV
+    
+    </a>
+    
+    <a
+    href="/export/json"
+    class="action-btn">
+    
+    🗂 Export JSON
+    
+    </a>
+
+    <a
+    href="/executive_report"
+    class="action-btn">
+
+    📑 Executive Report
+
+    </a>
+
+    <a
+    href="/dashboard_report"
+    class="action-btn">
+
+    📊 Dashboard PDF
+
+    </a>
+    
+    </div>
+    
+    </div>
+
+<div class="result-card">
+
+<table>
+
+    <thead>
+
+        <tr>
+        
+        <th>ID</th>
+        
+        <th>Module</th>
+        
+        <th>Target</th>
+        
+        <th>Status</th>
+        
+        <th>Timestamp</th>
+        
+        <th>Report</th>
+        
+        <th>Actions</th>
+        
+        </tr>
+        
+        </thead>
+        
+        <tbody>
+        
+        {% if rows %}
+        
+        {% for row in rows %}
+        
+        <tr>
+        
+        <td>{{ row[0] }}</td>
+        
+        <td>{{ row[1] }}</td>
+        
+        <td>
+        
+        <a href="/investigation/{{ row[0] }}">
+        
+        {{ row[2] }}
+        
+        </a>
+        
+        </td>
+        <td>
+
+            <div class="status-group">
+            
+            {% if row[5] == 1 %}
+            <span class="status-badge pinned">
+            📌 Pinned
+            </span>
+            {% endif %}
+            
+            {% if row[6] == 1 %}
+            <span class="status-badge important">
+            ⭐ Important
+            </span>
+            {% endif %}
+            
+            {% if row[5] != 1 and row[6] != 1 %}
+            <span class="status-badge normal">
+            ⚪ Normal
+            </span>
+            {% endif %}
+            
+            </div>
+            
+        </td>
+        
+        <td>{{ row[4] }}</td>
+        
+
+        <td>
+
+        
+        <a href="/report/{{ row[0] }}" class="pdf-btn">
+        
+        📄 PDF
+        
+        </a>
+        
+        </td>
+
+
+        
+        <td>
+        
+        <div class="action-group">
+        
+        <a href="#"
+            class="action-btn view-investigation"
+            data-id="{{ row[0] }}">
+         
+         👁 View
+         
+         </a>
+        
+         <button
+         class="action-btn pin-btn"
+         data-id="{{ row[0] }}">
+         
+         ⭐ Mark
+         
+         </button>
+        
+         <button
+         class="action-btn important-btn"
+         data-id="{{ row[0] }}">
+         
+         📌 Pin
+         
+         </button>
+        
+        <a href="/delete_investigation/{{ row[0] }}" class="delete-btn" onclick="return confirm('Delete investigation?')">
+        
+        🗑 Delete
+        
+        </a>
+        
+        </div>
+        
+        </td>
+        
+        </tr>
+        
+        {% endfor %}
+        
+        {% else %}
+        
+        <tr>
+        
+        <td colspan="7">
+        
+        No investigations found.
+        
+        </td>
+        
+        </tr>
+        
+        {% endif %}
+        
+        </tbody>
+
+</table>
+
+</div>
+
+<!-- Modal -->
+
+<div id="investigationModal" class="modal">
+
+<div class="modal-content">
+
+<span class="close-modal">
+
+×
+
+</span>
+
+<div id="modalBody">
+
+</div>
+
+</div>
+
+</div>
+
+<script> const modal = document.getElementById( "investigationModal" ); const modalBody = document.getElementById( "modalBody" ); /* View Investigation */ document .querySelectorAll( '.view-investigation' ) .forEach(btn => { btn.addEventListener( 'click', function(e){ e.preventDefault(); let id = this.dataset.id; fetch( `/investigation_api/${id}` ) .then(response => response.json() ) .then(data => { modalBody.innerHTML = ` <h2> 📂 Investigation #${data.id} </h2> <p> <b>Module:</b> ${data.module} </p> <p> <b>Target:</b> ${data.target} </p> <p> <b>Timestamp:</b> ${data.timestamp} </p> <hr> <pre> ${data.result} </pre>
+
+    <br>
+    
+    <a href="/report/${data.id}" class="action-btn">
+    
+    📄 Export PDF
+    
+    </a>
+    
+    `;
+    
+    modal.style.display =
+    "block";
+    
+    });
+    
+    });
+    
+    });
+    
+    /* Close Modal */
+    
+    document
+    .querySelector(
+    '.close-modal'
+    )
+    .onclick = function(){
+    
+    modal.style.display =
+    "none";
+    
+    };
+    
+    window.onclick =
+    function(event){
+    
+    if(
+    event.target ==
+    modal
+    ){
+    
+    modal.style.display =
+    "none";
+    
+    }
+    
+    };
+    
+    /* Pin Investigation */
+    
+    document.querySelectorAll('.pin-btn')
+    .forEach(btn => {
+
+        btn.addEventListener('click', function(e){
+
+            e.preventDefault();
+
+            let id = this.dataset.id;
+
+            let button = this;
+
+            fetch(`/pin_investigation/${id}`)
+            .then(response => response.json())
+            .then(data => {
+
+                if(data.success){
+
+                    location.reload();
+
+                }
+
+            });
+
+        });
+
+    });
+    
+    /* Important Investigation */
+    
+    document.querySelectorAll('.important-btn')
+    .forEach(btn => {
+
+        btn.addEventListener('click', function(e){
+
+            e.preventDefault();
+
+            let id = this.dataset.id;
+
+            let button = this;
+
+            fetch(`/important_investigation/${id}`)
+            .then(response => response.json())
+            .then(data => {
+
+                if(data.success){
+
+                    location.reload();
+
+                }
+
+                });
+
+        });
+
+    });
+    
+    /* Delete Investigation */
+    
+    document
+    .querySelectorAll(
+    '.delete-btn'
+    )
+    .forEach(btn => {
+    
+    btn.addEventListener(
+    'click',
+    
+    function(e){
+    
+    e.preventDefault();
+    
+    if(
+    !confirm(
+    'Delete investigation?'
+    )
+    ){
+    
+    return;
+    
+    }
+    
+    fetch(
+    this.href
+    )
+    
+    .then(response =>
+    response.json()
+    )
+    
+    .then(data => {
+    
+    if(data.success){
+    
+    location.reload();
+    
+    }
+    
+    });
+    
+    });
+    
+    });
+    
+    </script>
+
+
+
+{% endblock %}

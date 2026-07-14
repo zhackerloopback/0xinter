@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}
+Investigation Details
+{% endblock %}
+
+{% block content %}
+
+<h1>📂 Investigation Details</h1>
+
+<div class="result-card">
+
+<table>
+
+<tr> <td><strong>ID</strong></td> <td>{{ investigation[0] }}</td> </tr>
+
+<tr> <td><strong>Module</strong></td> <td>{{ investigation[1] }}</td> </tr>
+
+<tr> <td><strong>Target</strong></td> <td style="word-break:break-word;"> {{ investigation[2] }} </td> </tr>
+
+<tr> <td><strong>Timestamp</strong></td> <td>{{ investigation[4] }}</td> </tr>
+
+</table>
+
+</div>
+
+<br>
+
+<div class="result-card">
+
+<h2>📋 Investigation Result</h2>
+
+<pre class="investigation-result"> {{ pretty_result }} </pre>
+
+</div>
+
+<br>
+
+<div class="quick-actions">
+
+    <a href="/report/{{ investigation[0] }}" class="action-btn">
+    
+    📄 Export PDF
+    
+    </a>
+    
+    <a href="/pin_investigation/{{ investigation[0] }}" class="action-btn">
+    
+    📌 Pin
+    
+    </a>
+    
+    <a href="/important_investigation/{{ investigation[0] }}" class="action-btn">
+    
+    ⭐ Important
+    
+    </a>
+    
+    <a href="/delete_investigation/{{ investigation[0] }}" class="delete-btn" onclick="return confirm('Delete this investigation?')">
+    
+    🗑 Delete
+    
+    </a>
+    
+    <a href="/history" class="action-btn">
+    
+    ⬅ Back
+    
+    </a>
+    
+    </div>
+
+{% endblock %}

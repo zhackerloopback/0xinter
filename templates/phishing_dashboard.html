@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}
+Phishing Dashboard
+{% endblock %}
+
+{% block content %}
+
+<h1>📧 Phishing Intelligence Dashboard</h1>
+
+<div class="card-container">
+
+<div class="card">
+
+<h2>{{ total_emails }}</h2>
+
+<p>Total Email Investigations</p>
+
+</div>
+
+<div class="card">
+
+<h2>{{ spf_failures }}</h2>
+
+<p>SPF Failures</p>
+
+</div>
+
+<div class="card">
+
+<h2>0</h2>
+
+<p>DMARC Failures</p>
+
+</div>
+
+<div class="card">
+
+<h2>0</h2>
+
+<p>Suspicious Senders</p>
+
+</div>
+
+</div>
+
+<hr>
+
+<h2>📈 Phishing Trends</h2>
+
+<canvas id="phishingChart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+new Chart(
+
+document.getElementById(
+'phishingChart'
+),
+
+{
+type:'bar',
+
+data:{
+
+labels:[
+'Mon',
+'Tue',
+'Wed',
+'Thu',
+'Fri',
+'Sat',
+'Sun'
+],
+
+datasets:[{
+
+label:'Phishing Emails',
+
+data:[
+4,
+7,
+2,
+10,
+5,
+12,
+8
+]
+
+}]
+
+}
+
+});
+
+</script>
+
+<hr>
+
+<h2>📨 Recent Phishing Investigations</h2>
+
+<div class="result-card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Target</th>
+
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for email in recent_emails %}
+
+<tr>
+
+<td>{{ email.id }}</td>
+
+<td>{{ email.target }}</td>
+
+<td>{{ email.timestamp }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

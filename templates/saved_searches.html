@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}
+Saved Searches
+{% endblock %}
+
+{% block content %}
+
+<h1>🔍 Saved Searches</h1>
+
+<div class="tool-card">
+
+<form method="POST">
+
+<input type="hidden"
+       name="csrf_token"
+       value="{{ csrf_token() }}">
+
+<input
+type="text"
+name="name"
+placeholder="Search Name"
+required>
+
+<br><br>
+
+<select name="search_type">
+
+<option value="IOC">
+IOC Search
+</option>
+
+<option value="DOMAIN">
+Domain Search
+</option>
+
+<option value="EMAIL">
+Email Search
+</option>
+
+<option value="MALWARE">
+Malware Search
+</option>
+
+<option value="THREAT_HUNT">
+Threat Hunt
+</option>
+
+</select>
+
+<br><br>
+
+<input
+type="text"
+name="query"
+placeholder="Search Query"
+required>
+
+<br><br>
+
+<textarea
+name="description"
+rows="4"
+placeholder="Description"></textarea>
+
+<br><br>
+
+<button type="submit">
+
+💾 Save Search
+
+</button>
+
+</form>
+
+</div>
+
+<div class="result-card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Type</th>
+
+<th>Query</th>
+
+<th>Created By</th>
+
+<th>Date</th>
+
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for search in searches %}
+
+<tr>
+
+<td>{{ search.id }}</td>
+
+<td>{{ search.name }}</td>
+
+<td>{{ search.search_type }}</td>
+
+<td>{{ search.query }}</td>
+
+<td>{{ search.created_by }}</td>
+
+<td>{{ search.created_at }}</td>
+
+<td>
+
+    <a
+    href="/run_saved_search/{{ search.id }}"
+    class="action-btn">
+    
+    ▶ Run
+    
+    </a>
+
+<a
+href="/delete_saved_search/{{ search.id }}"
+class="delete-btn"
+onclick="return confirm('Delete search?')">
+
+🗑 Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

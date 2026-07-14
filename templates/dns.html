@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}
+DNS Lookup
+{% endblock %}
+
+{% block content %}
+
+<h1>DNS Lookup</h1>
+
+<div class="tool-card">
+
+<form method="POST">
+
+<input type="hidden"
+name="csrf_token"
+value="{{ csrf_token() }}">
+
+<input
+type="text"
+name="domain"
+placeholder="example.com"
+required>
+
+<button>
+Lookup
+</button>
+
+</form>
+
+</div>
+
+{% if records %}
+
+<div class="result-card">
+
+<h2>DNS Records</h2>
+
+{% for record_type, values in records.items() %}
+
+<h3>{{ record_type }}</h3>
+
+<ul>
+
+{% for value in values %}
+
+<li>{{ value }}</li>
+
+{% endfor %}
+
+</ul>
+
+{% endfor %}
+
+</div>
+
+{% endif %}
+
+{% endblock %}

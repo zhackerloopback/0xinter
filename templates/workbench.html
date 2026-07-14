@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}
+Investigation Workbench
+{% endblock %}
+
+{% block content %}
+
+<h1>🧩 Investigation Workbench</h1>
+
+<div class="quick-actions">
+
+    <a href="/create_case"
+    class="action-btn">
+    
+    ➕ New Case
+    
+    </a>
+    
+    <a href="/ioc"
+    class="action-btn">
+    
+    🌐 IOC Lookup
+    
+    </a>
+    
+    <a href="/domain_intel"
+    class="action-btn">
+    
+    🌍 Domain Intel
+    
+    </a>
+    
+    <a href="/email_intel"
+    class="action-btn">
+    
+    📧 Email Intel
+    
+    </a>
+    
+    <a href="/malware_intel"
+    class="action-btn">
+    
+    🦠 Malware Intel
+    
+    </a>
+    
+    </div>
+    
+    <hr>
+
+<div class="stats-container">
+
+<div class="card">
+<h2>{{ cases|length }}</h2>
+<p>Open Cases</p>
+</div>
+
+<div class="card">
+<h2>{{ evidence|length }}</h2>
+<p>Evidence</p>
+</div>
+
+<div class="card">
+<h2>{{ threats|length }}</h2>
+<p>Threat Feed</p>
+</div>
+
+<div class="card">
+<h2>{{ investigations|length }}</h2>
+<p>Investigations</p>
+</div>
+
+<div class="card">
+
+    <h2>
+    
+    {{ critical_threats }}
+    
+    </h2>
+    
+    <p>
+    
+    🔴 Critical Threats
+    
+    </p>
+    
+</div>
+
+</div>
+
+<hr>
+
+<div class="card-container">
+
+<div class="card">
+
+<h3>📁 Recent Cases</h3>
+
+<ul>
+
+{% for case in cases %}
+
+<li>
+
+<a href="/case/{{ case.id }}">
+
+{{ case.title }}
+
+</a>
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>📎 Recent Evidence</h3>
+
+<ul>
+
+{% for item in evidence %}
+
+<li>
+
+{{ item.filename }}
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+</div>
+
+<hr>
+
+<div class="result-card">
+
+<h2>🎯 Threat Feed</h2>
+
+<table>
+
+<tr>
+
+<th>Type</th>
+<th>Indicator</th>
+<th>Severity</th>
+
+</tr>
+
+{% for item in threats %}
+
+<tr>
+
+<td>{{ item.threat_type }}</td>
+
+<td>{{ item.indicator }}</td>
+
+<td>{{ item.severity }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+<hr>
+
+<div class="result-card">
+
+<h2>📝 Analyst Notes</h2>
+
+{% for note in notes %}
+
+<div class="received-block">
+
+<b>{{ note.title }}</b>
+
+<hr>
+
+{{ note.note }}
+
+</div>
+
+<br>
+
+{% endfor %}
+
+</div>
+
+<hr>
+
+<div class="result-card">
+
+<h2>🔍 Recent Investigations</h2>
+
+<table>
+
+<tr>
+
+<th>ID</th>
+<th>Module</th>
+<th>Target</th>
+<th>Time</th>
+
+</tr>
+
+{% for inv in investigations %}
+
+<tr>
+
+<td>{{ inv.id }}</td>
+
+<td>{{ inv.module }}</td>
+
+<td>{{ inv.target }}</td>
+
+<td>{{ inv.timestamp }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,700 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+
+<h2>🎯 SOC Overview</h2>
+
+<div class="card-container">
+
+<div class="card">
+<h2>{{ open_cases }}</h2>
+<p>Open Cases</p>
+</div>
+
+<div class="card">
+<h2>{{ critical_threats }}</h2>
+<p>Critical Threats</p>
+</div>
+
+<div class="card">
+
+    <h2>
+    IOC Correlation
+    </h2>
+
+    <p>
+    Cross-case intelligence analysis
+    </p>
+
+    <a
+    href="/ioc_correlation"
+    class="action-btn">
+
+    Open
+
+    </a>
+
+</div>
+
+<div class="card">
+<h2>{{ watchlist_count }}</h2>
+<p>Watchlist Items</p>
+</div>
+
+<div class="card">
+<h2>{{ hunt_count }}</h2>
+<p>Threat Hunts</p>
+</div>
+
+<hr>
+
+<h2>📈 Threat Trends</h2>
+
+<canvas id="trendChart"></canvas>
+
+</div>
+
+<h1>📊 Dashboard Overview</h1>
+
+<div class="card-container">
+
+<div class="card">
+    <h2>{{ total }}</h2>
+    <p>📁 Total Investigations</p>
+</div>
+
+<div class="card">
+    <h2>{{ total_users }}</h2>
+    <p>👥 Total Users</p>
+</div>
+
+<div class="card">
+    <h2>{{ admin_users }}</h2>
+    <p>👑 Admin Users</p>
+</div>
+
+<div class="card">
+    <h2>{{ active_users }}</h2>
+    <p>🟢 Active Users</p>
+</div>
+
+<div class="card">
+    <h2>{{ disabled_users }}</h2>
+    <p>🔴 Disabled Users</p>
+</div>
+
+<div class="card">
+    <h2>{{ whois_count }}</h2>
+    <p>🌍 WHOIS</p>
+</div>
+
+<div class="card">
+    <h2>{{ dns_count }}</h2>
+    <p>🌐 DNS</p>
+</div>
+
+<div class="card">
+    <h2>{{ hash_count }}</h2>
+    <p>#️⃣ Hash</p>
+</div>
+
+<div class="card">
+    <h2>{{ metadata_count }}</h2>
+    <p>📷 Metadata</p>
+</div>
+
+<div class="card">
+    <h2>{{ geoip_count }}</h2>
+    <p>📍 GeoIP</p>
+</div>
+
+<div class="card">
+    <h2>{{ vt_count }}</h2>
+    <p>🛡 VirusTotal</p>
+</div>
+
+<div class="card">
+    <h2>{{ email_count }}</h2>
+    <p>📧 Email</p>
+</div>
+
+<div class="card">
+    <h2>{{ ioc_count }}</h2>
+    <p>🎯 IOC</p>
+</div>
+
+<div class="card">
+    <h2>{{ yara_count }}</h2>
+    <p>🦠 YARA</p>
+</div>
+
+<div class="card">
+
+    <h2>{{ malware_count }}</h2>
+    
+    <p>🦠 Malware Intel</p>
+    
+</div>
+
+<div class="card">
+
+    <h2>
+    
+    {{ open_alerts }}
+    
+    </h2>
+    
+    <p>
+    
+    🚨 Open Alerts
+    
+    </p>
+    
+    <a
+    href="/alerts"
+    class="action-btn">
+    
+    View Alerts
+    
+    </a>
+    
+</div>
+
+</div>
+
+<hr>
+
+
+{% if dashboard and dashboard.dashboard_type %}
+
+<div class="result-card">
+
+<h2>
+
+    📊 {{ dashboard.dashboard_type }} 
+
+Dashboard
+
+</h2>
+
+</div>
+
+{% endif %}
+
+{% if dashboard and dashboard.dashboard_type == "SOC" %}
+
+<h2>🛡 SOC Dashboard</h2>
+
+<div class="card-container">
+
+    <div class="card">
+        <h2>{{ open_cases }}</h2>
+        <p>📁 Open Cases</p>
+    </div>
+
+    <div class="card">
+        <h2>{{ critical_threats }}</h2>
+        <p>🚨 Critical Threats</p>
+    </div>
+
+    <div class="card">
+        <h2>{{ watchlist_count }}</h2>
+        <p>🎯 Watchlist Items</p>
+    </div>
+
+    <div class="card">
+        <h2>{{ hunt_count }}</h2>
+        <p>🔍 Threat Hunts</p>
+    </div>
+
+</div>
+
+<br>
+
+<div class="card-container">
+
+    <div class="card">
+
+        <h3>🚨 Recent Threats</h3>
+
+        {% for threat in threats %}
+
+        <p style="text-align:left;">
+
+            {{ threat.indicator }}
+
+            <br>
+
+            <small>
+
+                {{ threat.severity }}
+
+            </small>
+
+        </p>
+
+        {% endfor %}
+
+    </div>
+
+    <div class="card">
+
+        <h3>📁 Recent Cases</h3>
+
+        {% for case in recent_cases %}
+
+        <p style="text-align:left;">
+
+            <a href="/case/{{ case.id }}">
+
+                {{ case.title }}
+
+            </a>
+
+        </p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% if dashboard and dashboard.dashboard_type == "THREAT" %}
+
+<div class="card-container">
+
+<div class="card">
+
+<h2>{{ critical_threats }}</h2>
+
+<p>Critical Threats</p>
+
+</div>
+
+<div class="card">
+
+<h2>{{ ip_count }}</h2>
+
+<p>Malicious IPs</p>
+
+</div>
+
+</div>
+
+{% endif %}
+
+{% if dashboard and dashboard.dashboard_type == "MALWARE" %}
+
+<div class="card">
+
+<h2>{{ malware_count }}</h2>
+
+<p>Malware Investigations</p>
+
+</div>
+
+{% endif %}
+
+{% if dashboard and dashboard.dashboard_type == "PHISHING" %}
+
+<div class="card">
+
+<h2>{{ email_count }}</h2>
+
+<p>Phishing Emails</p>
+
+</div>
+
+{% endif %}
+
+{% if dashboard and dashboard.dashboard_type == "HUNTING" %}
+
+<div class="card">
+
+<h2>{{ hunt_count }}</h2>
+
+<p>Threat Hunts</p>
+
+</div>
+
+{% endif %}
+
+<h2>⚡ Quick Actions</h2>
+
+<div class="quick-actions">
+
+<a href="/whois" class="action-btn">WHOIS</a>
+<a href="/dns" class="action-btn">DNS</a>
+<a href="/geoip" class="action-btn">GeoIP</a>
+<a href="/hash" class="action-btn">Hash</a>
+<a href="/metadata" class="action-btn">Metadata</a>
+<a href="/email" class="action-btn">Email</a>
+<a href="/ioc" class="action-btn">IOC</a>
+<a href="/yara" class="action-btn">YARA</a>
+<a href="/executive_report" class="action-btn">📑 Executive Report</a>
+<a href="/dashboard_report" class="action-btn">📊 Dashboard Report</a>
+
+</div>
+
+<hr>
+
+<h2>🕒 Recent Activity</h2>
+
+<div class="result-card">
+
+{% if recent_logs %}
+
+<table>
+
+<thead> <tr> <th>User</th> <th>Action</th> <th>IP Address</th> <th>Time</th> </tr> </thead>
+
+<tbody>
+
+{% for log in recent_logs %}
+
+<tr> <td>{{ log[0] }}</td> <td>{{ log[1] }}</td> <td>{{ log[2] }}</td> <td>{{ log[3] }}</td> </tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% else %}
+
+<p>No activity found.</p>
+
+{% endif %}
+
+</div>
+<!--  MITRE ATT&CK Heatmap -->
+<hr>
+
+<h2>🎯 Top ATT&CK Techniques</h2>
+
+<canvas id="mitreChart"></canvas>
+
+<hr>
+
+<h2>🖥 System Health</h2>
+
+<div class="card-container">
+
+<div class="card">
+    <h2>{{ db_status }}</h2>
+    <p>Database</p>
+</div>
+
+<div class="card">
+    <h2>{{ internet_status }}</h2>
+    <p>Internet</p>
+</div>
+
+<div class="card">
+    <h2>{{ vt_status }}</h2>
+    <p>VirusTotal API</p>
+</div>
+
+<div class="card">
+    <h2>{{ abuse_status }}</h2>
+    <p>AbuseIPDB API</p>
+</div>
+
+<div class="card">
+    <h2>{{ db_size }} KB</h2>
+    <p>Database Size</p>
+</div>
+
+<div class="card">
+    <h2>{{ current_time }}</h2>
+    <p>Server Time</p>
+</div>
+
+<div class="card">
+    <h2>{{ session.get('user', 'Guest') }}</h2>
+    <p>Logged In User</p>
+</div>
+
+</div>
+
+<hr>
+
+<h2>📂 Recent Investigations</h2>
+
+<div class="result-card">
+
+{% if recent_investigations %}
+
+<table>
+
+<thead> <tr> <th>Module</th> <th>Target</th> <th>Time</th> </tr> </thead>
+
+<tbody>
+
+{% for item in recent_investigations %}
+
+<tr>
+
+<td>{{ item[0] }}</td>
+
+<td style="word-break:break-word;"> {{ item[1] }} </td>
+
+<td>{{ item[2] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% else %}
+
+<p>No investigations found.</p>
+
+{% endif %}
+
+</div>
+
+<hr>
+
+<h2>🚨 Security Alerts</h2>
+
+{% if alerts %}
+
+{% for alert in alerts %}
+
+<div class="alert-card {{ alert.level }}">
+
+<h3>{{ alert.title }}</h3>
+
+<p>{{ alert.message }}</p>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="alert-card success">
+
+<h3>✅ No Active Alerts</h3>
+
+<p>System is operating normally.</p>
+
+</div>
+
+{% endif %}
+
+<hr>
+
+<h2>📈 Dashboard Insights</h2>
+
+<div class="card-container">
+
+<div class="card"> <h2>{{ most_module }}</h2> <p> Most Used Module <br> {{ most_module_count }} Investigations </p> </div>
+
+<div class="card"> <h2 style="word-break:break-word;"> {{ top_target }} </h2> <p> Top Investigation Target <br> {{ top_target_count }} Times </p> </div>
+
+<div class="card"> <h2>{{ today_count }}</h2> <p>Today's Investigations</p> </div>
+
+<div class="card"> <h2>{{ active_user }}</h2> <p> Most Active User <br> {{ active_user_actions }} Actions </p> </div>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+    new Chart(
+    
+    document.getElementById(
+    'mitreChart'
+    ),
+    
+    {
+    
+    type:'bar',
+    
+    data:{
+    
+    labels:[
+    
+    'Initial Access',
+    
+    'Execution',
+    
+    'Persistence',
+    
+    'Privilege Esc.',
+    
+    'Command & Control'
+    
+    ],
+    
+    datasets:[{
+    
+    label:'Technique Count',
+    
+    data:[
+    
+    15,
+    
+    21,
+    
+    8,
+    
+    4,
+    
+    18
+    
+    ],
+    
+    borderWidth:1
+    
+    }]
+    
+    },
+    
+    options:{
+    
+    responsive:true,
+    
+    plugins:{
+    
+    legend:{
+    
+    display:false
+    
+    }
+    
+    },
+    
+    scales:{
+    
+    y:{
+    
+    beginAtZero:true
+    
+    }
+    
+    }
+    
+    }
+    
+    }
+    
+    );
+    
+</script>
+
+<script>
+
+    const trendCtx =
+    document.getElementById(
+    'trendChart'
+    );
+    
+    new Chart(
+    trendCtx,
+    {
+        type:'line',
+    
+        data:{
+    
+            labels:
+            {{ trend_labels|tojson }},
+    
+            datasets:[{
+    
+                label:
+                'Threats Detected',
+    
+                data:
+                {{ trend_values|tojson }},
+    
+                fill:false,
+    
+                tension:0.3
+    
+            }]
+        },
+    
+        options:{
+    
+            responsive:true,
+    
+            plugins:{
+    
+                legend:{
+    
+                    display:true
+    
+                }
+    
+            }
+        }
+    });
+    
+</script>
+
+<script>
+
+    const canvas =
+    document.getElementById(
+        "moduleChart"
+    );
+    
+    const chartData =
+    JSON.parse(
+        canvas.dataset.chart
+    );
+    
+    const ctx = canvas;
+    
+    new Chart(ctx, {
+    
+        type: "bar",
+    
+        data: {
+    
+            labels:
+            Object.keys(
+                chartData
+            ),
+    
+            datasets: [{
+    
+                label:
+                "Investigations",
+    
+                data:
+                Object.values(
+                    chartData
+                ),
+    
+                borderWidth: 1
+    
+            }]
+    
+        }
+    
+    });
+    
+</script>
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}
+IOC Correlation
+{% endblock %}
+
+{% block content %}
+
+<h1>🔗 IOC Correlation Engine</h1>
+
+<div class="tool-card">
+
+<form method="POST">
+
+<input type="hidden"
+name="csrf_token"
+value="{{ csrf_token() }}">
+
+<input
+type="text"
+name="indicator"
+placeholder="IP, Domain, Email or Hash"
+required>
+
+<button type="submit">
+
+Correlate
+
+</button>
+
+</form>
+
+</div>
+
+{% if result %}
+
+<div class="result-card">
+
+<h2>
+
+{{ result.indicator }}
+
+</h2>
+
+<p>
+
+Correlation Score:
+
+<strong>
+
+{{ result.score }}/100
+
+</strong>
+
+</p>
+
+</div>
+
+<hr>
+
+<div class="card-container">
+
+<div class="card">
+
+<h2>
+
+{{ result.investigations|length }}
+
+</h2>
+
+<p>Investigations</p>
+
+</div>
+
+<div class="card">
+
+<h2>
+
+{{ result.cases|length }}
+
+</h2>
+
+<p>Cases</p>
+
+</div>
+
+<div class="card">
+
+<h2>
+
+{{ result.watchlists|length }}
+
+</h2>
+
+<p>Watchlists</p>
+
+</div>
+
+<div class="card">
+
+<h2>
+
+{{ result.threats|length }}
+
+</h2>
+
+<p>Threat Feed</p>
+
+</div>
+
+</div>
+
+<hr>
+
+<div class="result-card">
+
+<h2>📂 Related Cases</h2>
+
+<ul>
+
+{% for case in result.cases %}
+
+<li>
+
+{{ case.title }}
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+<hr>
+
+<div class="result-card">
+
+<h2>🚨 Threat Feed Matches</h2>
+
+<ul>
+
+{% for item in result.threats %}
+
+<li>
+
+{{ item.indicator }}
+
+-
+
+{{ item.severity }}
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,379 @@
+{% extends "base.html" %}
+
+{% block title %}
+AlienVault OTX Intelligence
+{% endblock %}
+
+{% block content %}
+
+<h1>🚨 AlienVault OTX Intelligence Center</h1>
+
+<div class="tool-card">
+
+    <form method="POST">
+
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token() }}">
+
+        <input
+            type="text"
+            name="indicator"
+            placeholder="IP, Domain, URL, MD5, SHA1 or SHA256"
+            required>
+
+            <button
+            type="submit"
+            onclick="showLoader()">
+        
+            🔍 Lookup
+        
+            </button>
+
+            <div
+            id="loader"
+            style="
+            display:none;
+            margin-top:10px;
+            color:#f59e0b;
+            font-weight:bold;">
+
+            ⏳ Fetching Threat Intelligence...
+
+            </div>
+
+    </form>
+
+</div>
+
+{% if result %}
+
+{% if result.error %}
+
+<div class="result-card">
+
+    <h2>❌ Error</h2>
+
+    <p>
+
+        {{ result.error }}
+
+    </p>
+
+</div>
+
+{% else %}
+
+<!-- Summary Cards -->
+
+<div class="card-container">
+
+    <div class="card">
+
+        <h2>{{ pulse_count }}</h2>
+
+        <p>Threat Pulses</p>
+
+    </div>
+
+    <div class="card">
+
+        <h2>{{ reputation }}</h2>
+
+        <p>Reputation</p>
+
+    </div>
+
+    <div class="card">
+
+        <h2>{{ country }}</h2>
+
+        <p>Country</p>
+
+    </div>
+
+    <div class="card">
+
+        <h2>{{ summary.risk_level }}</h2>
+
+        <p>Risk Level</p>
+
+    </div>
+
+</div>
+
+<br>
+
+<!-- Intelligence Summary -->
+
+<div class="result-card">
+
+    <h2>📝 Intelligence Summary</h2>
+
+    <table class="table">
+
+        <tr>
+
+            <th>Field</th>
+
+            <th>Value</th>
+
+        </tr>
+
+        <tr>
+
+            <td>Indicator</td>
+
+            <td>{{ summary.indicator }}</td>
+
+        </tr>
+
+        <tr>
+
+            <td>Country</td>
+
+            <td>{{ summary.country }}</td>
+
+        </tr>
+
+        <tr>
+
+            <td>Pulse Count</td>
+
+            <td>{{ summary.pulse_count }}</td>
+
+        </tr>
+
+        <tr>
+
+            <td>Reputation</td>
+
+            <td>{{ summary.reputation }}</td>
+
+        </tr>
+
+        <tr>
+
+            <td>Threat Tags</td>
+
+            <td>{{ summary.tag_count }}</td>
+
+        </tr>
+
+        <tr>
+
+            <td>Risk Level</td>
+
+            <td>
+
+                {% if summary.risk_level == "High" %}
+
+                <span class="status-disabled">
+
+                    HIGH
+
+                </span>
+
+                {% elif summary.risk_level == "Medium" %}
+
+                <span class="status-warning">
+
+                    MEDIUM
+
+                </span>
+
+                {% else %}
+
+                <span class="status-active">
+
+                    LOW
+
+                </span>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+    </table>
+
+</div>
+
+<br>
+
+<!-- Threat Tags -->
+
+{% if tags %}
+
+<div class="result-card">
+
+    <h2>🏷 Threat Tags</h2>
+
+    <div>
+
+        {% for tag in tags %}
+
+        <span class="badge-user">
+
+            {{ tag }}
+
+        </span>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<br>
+
+{% endif %}
+
+<!-- Raw JSON -->
+
+<div class="result-card">
+
+    <details>
+
+        <summary>
+
+            📄 Advanced Technical Details
+
+        </summary>
+
+        <br>
+
+        <pre>
+
+{{ result | tojson(indent=2) }}
+
+        </pre>
+
+    </details>
+
+</div>
+
+{% endif %}
+
+{% endif %}
+
+<style>
+
+.table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.table th,
+.table td{
+
+    border:1px solid #333;
+
+    padding:10px;
+
+}
+
+.badge-user{
+
+    display:inline-block;
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    margin:4px;
+
+    font-size:12px;
+
+    font-weight:bold;
+
+}
+
+.status-active{
+
+    background:#14532d;
+
+    color:#22c55e;
+
+    padding:6px 12px;
+
+    border-radius:6px;
+
+    font-weight:bold;
+
+}
+
+.status-warning{
+
+    background:#78350f;
+
+    color:#f59e0b;
+
+    padding:6px 12px;
+
+    border-radius:6px;
+
+    font-weight:bold;
+
+}
+
+.status-disabled{
+
+    background:#7f1d1d;
+
+    color:#ef4444;
+
+    padding:6px 12px;
+
+    border-radius:6px;
+
+    font-weight:bold;
+
+}
+
+pre{
+
+    white-space:pre-wrap;
+
+    word-wrap:break-word;
+
+    overflow-x:auto;
+
+}
+
+details summary{
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+}
+
+</style>
+
+<script>
+
+    function showLoader(){
+    
+        document.getElementById(
+            "loader"
+        ).style.display = "block";
+    
+        document.querySelector(
+            'button[type="submit"]'
+        ).disabled = true;
+    
+    }
+    
+</script>
+
+{% endblock %}

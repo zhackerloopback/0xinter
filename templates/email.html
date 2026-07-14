@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}
+Email Analyzer
+{% endblock %}
+
+{% block content %}
+
+<h1>Email Header Analyzer</h1>
+
+<form method="POST">
+
+    <label for="header">
+        Email Header
+    </label>
+
+    <br><br>
+
+    <textarea
+        id="header"
+        name="header"
+        rows="15"
+        style="width:100%;"
+        required></textarea>
+
+    <br><br>
+
+    <button type="submit">
+        Analyze Header
+    </button>
+
+</form>
+
+{% if result %}
+
+<hr>
+
+<h2>Analysis Result</h2>
+<h3>AbuseIPDB Reputation</h3>
+
+{% if result.abuse and result.abuse.data %}
+
+<table>
+
+<tr>
+    <td>Abuse Score</td>
+    <td>
+        {{ result.abuse.data.abuseConfidenceScore }}
+    </td>
+</tr>
+
+<tr>
+    <td>Total Reports</td>
+    <td>
+        {{ result.abuse.data.totalReports }}
+    </td>
+</tr>
+
+<tr>
+    <td>Country</td>
+    <td>
+        {{ result.abuse.data.countryCode }}
+    </td>
+</tr>
+
+<tr>
+    <td>ISP</td>
+    <td>
+        {{ result.abuse.data.isp }}
+    </td>
+</tr>
+
+<tr>
+    <td>Domain</td>
+    <td>
+        {{ result.abuse.data.domain }}
+    </td>
+</tr>
+
+</table>
+
+{% endif %}
+
+<table border="1" cellpadding="10">
+
+<tr>
+    <th>Field</th>
+    <th>Value</th>
+</tr>
+
+<tr>
+    <td>From</td>
+    <td>{{ result["from"] }}</td>
+</tr>
+
+<tr>
+    <td>To</td>
+    <td>{{ result["to"] }}</td>
+</tr>
+
+<tr>
+    <td>Subject</td>
+    <td>{{ result["subject"] }}</td>
+</tr>
+
+<tr>
+    <td>DKIM Result</td>
+
+    <td>
+
+    {% if result["dkim"] == "PASS" %}
+
+        ✅ PASS
+
+    {% elif result["dkim"] == "FAIL" %}
+
+        ❌ FAIL
+
+    {% else %}
+
+        ⚠ {{ result["dkim"] }}
+
+    {% endif %}
+
+    </td>
+
+</tr>
+
+<tr>
+    <td>Source IP</td>
+    <td>{{ result["source_ip"] }}</td>
+</tr>
+
+<tr>
+    <td>SPF Result</td>
+
+    <td>
+
+    {% if result["spf"] == "PASS" %}
+
+        ✅ PASS
+
+    {% elif result["spf"] == "FAIL" %}
+
+        ❌ FAIL
+
+    {% else %}
+
+        ⚠ {{ result["spf"] }}
+
+    {% endif %}
+
+    </td>
+
+</tr>
+
+<tr>
+    <td>
+
+        {% if result["dmarc"] == "PASS" %}
+        
+        <span style="color:lime;">
+        PASS
+        </span>
+        
+        {% elif result["dmarc"] == "FAIL" %}
+        
+        <span style="color:red;">
+        FAIL
+        </span>
+        
+        {% else %}
+        
+        <span style="color:orange;">
+        {{ result["dmarc"] }}
+        </span>
+        
+        {% endif %}
+        
+        </td>
+</tr>
+
+</table>
+
+<h3>Received Headers</h3>
+
+{% for item in result["received"] %}
+
+<pre>{{ item }}</pre>
+
+{% endfor %}
+
+<br>
+
+<a href="/email-report">
+
+    <button type="button">
+
+        Export PDF Report
+
+    </button>
+
+</a>
+
+{% endif %}
+
+{% endblock %}

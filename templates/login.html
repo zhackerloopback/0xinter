@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body class="auth-body">
+
+<div class="auth-card">
+
+    <h1>OSINT Dashboard</h1>
+
+    <p>Sign in to continue</p>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+
+    <div class="alert">
+
+        {{ messages[0] }}
+
+    </div>
+
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+
+        <input type="hidden"
+               name="csrf_token"
+               value="{{ csrf_token() }}">
+
+        <input type="text"
+               name="username"
+               placeholder="Username"
+               required>
+
+        <input type="password"
+               id="password"
+               name="password"
+               placeholder="Password"
+               required>
+
+        <div class="checkbox-group">
+
+            <input type="checkbox"
+                   id="showPassword">
+
+            <label for="showPassword">
+                Show Password
+            </label>
+
+        </div>
+
+        <div class="checkbox-group">
+
+            <input type="checkbox"
+                   id="remember"
+                   name="remember">
+
+            <label for="remember">
+                Remember Me
+            </label>
+
+        </div>
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+    <div class="auth-links">
+
+        <a href="/forgot-password">
+            Forgot Password?
+        </a>
+
+        <a href="/register">
+            Create Account
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+
+const showPassword =
+document.getElementById(
+    "showPassword"
+);
+
+const password =
+document.getElementById(
+    "password"
+);
+
+showPassword.addEventListener(
+    "change",
+    function(){
+
+        password.type =
+        this.checked
+        ? "text"
+        : "password";
+
+    }
+);
+
+</script>
+
+</body>
+</html>

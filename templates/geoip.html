@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}
+GeoIP Lookup
+{% endblock %}
+
+{% block content %}
+
+<h1>GeoIP Lookup</h1>
+
+<div class="tool-card">
+
+<form method="POST">
+
+    <input type="hidden"
+    name="csrf_token"
+    value="{{ csrf_token() }}">
+
+<input
+type="text"
+name="ip"
+placeholder="8.8.8.8"
+required>
+
+<button>
+Lookup
+</button>
+
+</form>
+
+</div>
+
+{% if result %}
+
+<div class="result-card">
+
+<h2>GeoIP Result</h2>
+
+<table>
+
+<tr>
+<td>IP</td>
+<td>{{ result.query }}</td>
+</tr>
+
+<tr>
+<td>Country</td>
+<td>{{ result.country }}</td>
+</tr>
+
+<tr>
+<td>City</td>
+<td>{{ result.city }}</td>
+</tr>
+
+<tr>
+<td>ISP</td>
+<td>{{ result.isp }}</td>
+</tr>
+
+<tr>
+<td>Organization</td>
+<td>{{ result.org }}</td>
+</tr>
+
+</table>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

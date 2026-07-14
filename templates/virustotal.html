@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VirusTotal Report</title>
+</head>
+<body>
+
+<h1>VirusTotal Report</h1>
+
+{% if data.error %}
+
+    <h3>
+        {{ data.error.message }}
+    </h3>
+
+{% elif data.data %}
+
+    <h2>Detection Summary</h2>
+
+    <p>
+    <b>Malicious:</b>
+    {{ data.data.attributes.last_analysis_stats.malicious }}
+    </p>
+
+    <p>
+    <b>Suspicious:</b>
+    {{ data.data.attributes.last_analysis_stats.suspicious }}
+    </p>
+
+    <p>
+    <b>Undetected:</b>
+    {{ data.data.attributes.last_analysis_stats.undetected }}
+    </p>
+
+    <p>
+    <b>Harmless:</b>
+    {{ data.data.attributes.last_analysis_stats.harmless }}
+    </p>
+
+    <hr>
+
+    <h2>File Info</h2>
+
+    <p>
+    <b>Name:</b>
+    {{ data.data.attributes.meaningful_name }}
+    </p>
+
+    <p>
+    <b>Type:</b>
+    {{ data.data.attributes.type_description }}
+    </p>
+
+    <p>
+    <b>Size:</b>
+    {{ data.data.attributes.size }}
+    </p>
+
+{% else %}
+
+<pre>{{ data }}</pre>
+
+{% endif %}
+
+{% if error %}
+
+<h3>{{ error }}</h3>
+
+<p>
+Use the
+<b>Upload To VirusTotal</b>
+button from Hash Analyzer.
+</p>
+
+{% endif %}
+</body>
+</html>

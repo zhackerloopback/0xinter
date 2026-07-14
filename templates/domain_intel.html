@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}
+Domain Intelligence
+{% endblock %}
+
+{% block content %}
+
+<h1>🌐 Domain Intelligence Center</h1>
+
+<div class="tool-card">
+
+<form method="POST">
+
+<input type="hidden"
+       name="csrf_token"
+       value="{{ csrf_token() }}">
+
+<input
+type="text"
+name="domain"
+placeholder="example.com"
+required>
+
+<button type="submit">
+
+Analyze
+
+</button>
+
+</form>
+
+</div>
+
+{% if result %}
+
+<div class="result-card">
+
+<h2>
+
+{{ result.domain }}
+
+</h2>
+
+<hr>
+
+<p>
+
+Threat Score:
+
+<b>
+
+{{ result.score }}/100
+
+</b>
+
+</p>
+
+<p>
+
+Verdict:
+
+{% if result.verdict == "Malicious" %}
+
+<span style="color:red">
+
+🔴 Malicious
+
+</span>
+
+{% elif result.verdict == "Suspicious" %}
+
+<span style="color:orange">
+
+🟠 Suspicious
+
+</span>
+
+{% else %}
+
+<span style="color:lime">
+
+🟢 Benign
+
+</span>
+
+{% endif %}
+
+</p>
+
+<hr>
+
+<table>
+
+<tr>
+
+<td>Registrar</td>
+
+<td>{{ result.intel.registrar }}</td>
+
+</tr>
+
+<tr>
+
+<td>Creation Date</td>
+
+<td>{{ result.intel.creation_date }}</td>
+
+</tr>
+
+<tr>
+
+<td>Expiration Date</td>
+
+<td>{{ result.intel.expiration_date }}</td>
+
+</tr>
+
+<tr>
+
+<td>Domain Age</td>
+
+<td>{{ result.intel.domain_age }}</td>
+
+</tr>
+
+<tr>
+
+<td>Name Servers</td>
+
+<td>{{ result.intel.name_servers }}</td>
+
+</tr>
+
+<tr>
+
+<td>A Records</td>
+
+<td>{{ result.intel.a_records }}</td>
+
+</tr>
+
+<tr>
+
+<td>MX Records</td>
+
+<td>{{ result.intel.mx_records }}</td>
+
+</tr>
+
+</table>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

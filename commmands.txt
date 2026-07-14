@@ -1,0 +1,12 @@
+docker run -p 5000:5000 osint-dashboard
+
+python -m venv venv
+
+venv\scripts\activate
+
+docker run -p 5000:5000 -v "${PWD}\investigations.db:/app/investigations.db" -v "${PWD}\uploads:/app/uploads" -v "${PWD}\reports:/app/reports" osint-dashboard
+
+docker run -d -p 5000:5000 --name osint-app osint-dashboard   clear
+
+
+pip freeze > requirements.txt

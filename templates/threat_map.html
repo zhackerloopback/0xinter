@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>🌍 Global Threat Map</h1>
+
+<div id="map"
+style="height:700px;"></div>
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css">
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+
+var map =
+L.map('map')
+.setView([20,0],2);
+
+L.tileLayer(
+'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+).addTo(map);
+
+{% for item in markers %}
+
+L.marker([
+{{ item.lat }},
+{{ item.lon }}
+])
+
+.addTo(map)
+
+.bindPopup(
+"{{ item.ip }}<br>{{ item.country }}"
+);
+
+{% endfor %}
+
+</script>
+
+{% endblock %}

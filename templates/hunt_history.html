@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}
+Hunt History
+{% endblock %}
+
+{% block content %}
+
+<h1>📜 Hunt History</h1>
+
+<div class="result-card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Hunt Name</th>
+
+<th>Type</th>
+
+<th>Created By</th>
+
+<th>Date</th>
+
+<th>Results</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for hunt in hunts %}
+
+<tr>
+
+<td>{{ hunt.id }}</td>
+
+<td>{{ hunt.hunt_name }}</td>
+
+<td>{{ hunt.hunt_type }}</td>
+
+<td>{{ hunt.created_by }}</td>
+
+<td>{{ hunt.created_at }}</td>
+
+<td>
+
+<details>
+
+<summary>
+
+View Results
+
+</summary>
+
+<pre>
+
+{{ hunt.results }}
+
+</pre>
+
+</details>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

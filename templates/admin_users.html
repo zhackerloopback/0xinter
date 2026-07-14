@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}
+User Management
+{% endblock %}
+
+{% block content %}
+
+<h1>👥 User Management</h1>
+
+<div class="tool-card">
+
+<input
+    type="text"
+    id="searchUser"
+    placeholder="🔍 Search Username..."
+    onkeyup="searchUsers()">
+
+</div>
+
+<div class="result-card">
+
+<table id="usersTable">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Username</th>
+
+<th>Email</th>
+
+<th>Role</th>
+
+<th>Last Login</th>
+
+<th>Failed Attempts</th>
+
+<th>Status</th>
+
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for user in users %}
+
+<tr>
+
+<td>{{ user.id }}</td>
+
+<td> <strong>{{ user.username }}</strong> </td>
+
+<td>
+
+{{ user.email or "Not Set" }}
+
+</td>
+
+<td>
+
+{% if user.role == "admin" %}
+
+<span class="badge-admin">
+
+👑 Admin
+
+</span>
+
+{% else %}
+
+<span class="badge-user">
+
+👤 User
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{{ user.last_login or "Never" }}
+
+</td>
+
+<td>
+
+{{ user.failed_attempts }}
+
+</td>
+
+<td>
+
+{% if user.is_active %}
+
+<span class="status-active">
+
+🟢 Active
+
+</span>
+
+{% else %}
+
+<span class="status-disabled">
+
+🔴 Disabled
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+<div class="action-group">
+
+<a href="/manage_user/{{ user.id }}" class="manage-btn">
+
+⚙ Manage
+
+</a>
+
+<a
+href="/delete_user/{{ user.id }}"
+class="delete-btn"
+
+onclick="return confirm('Delete this user?')">
+
+🗑 Delete
+
+</a>
+
+</div>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+<script> function searchUsers(){ let input = document.getElementById( "searchUser" ); let filter = input.value.toUpperCase(); let table = document.getElementById( "usersTable" ); let tr = table.getElementsByTagName( "tr" ); for( let i=1; i<tr.length; i++ ){ let td = tr[i].getElementsByTagName( "td" )[1]; if(td){ let txt = td.textContent || td.innerText; tr[i].style.display = txt.toUpperCase().indexOf( filter ) > -1 ? "" : "none"; } } } </script>
+
+{% endblock %}

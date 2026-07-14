@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}
+MITRE ATT&CK Mapping
+{% endblock %}
+
+{% block content %}
+
+<h1>🎯 MITRE ATT&CK Mapping</h1>
+
+<div class="tool-card">
+
+<form method="POST">
+
+<input type="hidden"
+       name="csrf_token"
+       value="{{ csrf_token() }}">
+
+<select
+name="indicator_type"
+required>
+
+<option value="EMAIL">
+
+Email Threat
+
+</option>
+
+<option value="IOC">
+
+IOC
+
+</option>
+
+<option value="DOMAIN_INTEL">
+
+Domain Intelligence
+
+</option>
+
+<option value="MALWARE_INTEL">
+
+Malware Intelligence
+
+</option>
+
+</select>
+
+<br><br>
+
+<button type="submit">
+
+Map ATT&CK
+
+</button>
+
+</form>
+
+</div>
+
+{% if result %}
+
+<div class="result-card">
+
+<h2>
+
+🎯 ATT&CK Mapping
+
+</h2>
+
+<table>
+
+<tr>
+
+<td>Tactic</td>
+
+<td>{{ result.tactic }}</td>
+
+</tr>
+
+<tr>
+
+<td>Technique ID</td>
+
+<td>{{ result.technique_id }}</td>
+
+</tr>
+
+<tr>
+
+<td>Technique Name</td>
+
+<td>{{ result.technique_name }}</td>
+
+</tr>
+
+</table>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

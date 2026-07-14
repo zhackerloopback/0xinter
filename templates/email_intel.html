@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}
+Email Threat Intelligence
+{% endblock %}
+
+{% block content %}
+
+<h1>📧 Email Threat Intelligence</h1>
+
+<div class="tool-card">
+
+<form method="POST">
+
+<input type="hidden"
+       name="csrf_token"
+       value="{{ csrf_token() }}">
+
+<textarea
+name="header"
+rows="15"
+placeholder="Paste email header..."
+required></textarea>
+
+<br><br>
+
+<button type="submit">
+
+Analyze Email
+
+</button>
+
+</form>
+
+</div>
+
+{% if result %}
+
+<div class="result-card">
+
+<h2>
+
+Threat Assessment
+
+</h2>
+
+<p>
+
+Threat Score:
+
+<b>
+
+{{ result.score }}/100
+
+</b>
+
+</p>
+
+<p>
+
+Verdict:
+
+{% if result.verdict == "Malicious" %}
+
+<span style="color:red">
+
+🔴 Malicious
+
+</span>
+
+{% elif result.verdict == "Suspicious" %}
+
+<span style="color:orange">
+
+🟠 Suspicious
+
+</span>
+
+{% else %}
+
+<span style="color:lime">
+
+🟢 Benign
+
+</span>
+
+{% endif %}
+
+</p>
+
+<hr>
+
+<table>
+
+<tr>
+<td>From</td>
+<td>{{ result.intel.from }}</td>
+</tr>
+
+<tr>
+<td>To</td>
+<td>{{ result.intel.to }}</td>
+</tr>
+
+<tr>
+<td>Subject</td>
+<td>{{ result.intel.subject }}</td>
+</tr>
+
+<tr>
+<td>SPF</td>
+<td>{{ result.intel.spf }}</td>
+</tr>
+
+<tr>
+<td>DKIM Present</td>
+<td>{{ result.intel.dkim }}</td>
+</tr>
+
+<tr>
+<td>DMARC</td>
+<td>{{ result.intel.dmarc }}</td>
+</tr>
+
+<tr>
+<td>Source IP</td>
+<td>{{ result.intel.source_ip }}</td>
+</tr>
+
+</table>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

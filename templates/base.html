@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+{% block title %}
+OSINT Dashboard
+{% endblock %}
+</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <h2 class="logo">
+        OSINT Dashboard
+    </h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/alerts">🚨 Alert Center</a>
+
+    <a href="/threat_map">🌍 Threat Map </a>
+
+    <a href="/whois">WHOIS</a>
+
+    <a href="/dns">DNS</a>
+
+    <a href="/domain_intel">🌐 Domain Intelligence</a>
+
+    <a href="/shodan_lookup">🌐 Shodan</a>
+
+    <a href="/otx_lookup">🚨 AlienVault OTX </a>
+
+    <a href="/geoip">GeoIP</a>
+
+    <a href="/hash">Hash Analyzer</a>
+
+    <a href="/metadata">Metadata</a>
+
+    <a href="/yara">YARA Scanner</a>
+
+    <a href="/malware_intel">🦠 Malware Intelligence</a>
+
+    <a href="/malware_dashboard">🦠 Malware Dashboard</a>
+
+    <a href="/email">Email Analyzer</a>
+
+    <a href="/email_intel">📧 Email Threat Intel</a>
+
+    <a href="/ioc">IOC Analyzer</a>
+
+    <a href="/ioc_correlation">🔗 IOC Correlation</a>
+
+    <a href="/reputation">🛡 IOC Reputation</a>
+
+    <a href="/mitre_lookup">🎯 MITRE ATT&CK </a>
+
+    <a href="/threat_feed">🚨 Threat Feed </a>
+
+    <a href="/history">History</a>
+
+    <a href="/notes">📝 Analyst Notes</a>
+
+    <a href="/watchlists">🎯 Watchlists</a>
+
+    <a href="/saved_searches"> 🔍 Saved Searches </a>
+
+    <a href="/threat_hunting"> 🎯 Threat Hunting </a>
+
+    <a href="/hunt_history"> 📜 Hunt History </a>
+
+    <a href="/workbench"> 🧩 Investigation Workbench </a>
+
+    <a href="/dashboards"> 📊 Dashboards </a>
+
+    <a href="/phishing_dashboard">📧 Phishing Dashboard</a>
+
+    <a href="/audit">Audit Logs</a>
+
+    <a href="/cases">Cases</a>
+
+    <a href="/admin">Admin</a>
+
+    <a href="/admin/users">Users</a>
+
+    <a href="/logout">Logout</a>
+
+</div>
+
+<div class="main-content">
+
+    <div class="navbar">
+
+        <h3>
+            Welcome,
+            {{ session.get('user', 'Guest') }}
+        </h3>
+
+    </div>
+
+    <div class="page-content">
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

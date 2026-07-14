@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}
+Analyst Notes
+{% endblock %}
+
+{% block content %}
+
+<h1>📝 Analyst Notes</h1>
+
+<div class="tool-card">
+
+<form method="POST">
+
+<input type="hidden"
+       name="csrf_token"
+       value="{{ csrf_token() }}">
+
+<input
+type="text"
+name="title"
+placeholder="Title"
+required>
+
+<br><br>
+
+<textarea
+name="note"
+rows="6"
+placeholder="Write analyst note..."
+required></textarea>
+
+<br><br>
+
+<button type="submit">
+
+💾 Save Note
+
+</button>
+
+</form>
+
+</div>
+
+{% for note in notes %}
+
+<div class="result-card">
+
+<h3>
+
+{{ note.title }}
+
+</h3>
+
+<p>
+
+{{ note.note }}
+
+</p>
+
+<hr>
+
+<div class="note-footer">
+
+    <small>
+    
+    {{ note.created_by }}
+    
+    |
+    
+    {{ note.created_at }}
+    
+    </small>
+    
+    <a
+    href="/delete_note/{{ note.id }}"
+    class="delete-btn"
+    onclick="return confirm('Delete this note?')">
+    
+    🗑 Delete
+    
+    </a>
+    
+</div>
+
+</div>
+
+<br>
+
+{% endfor %}
+
+{% endblock %}

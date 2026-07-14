@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}
+Threat Feed Dashboard
+{% endblock %}
+
+{% block content %}
+
+<h1>🚨 Threat Intelligence Dashboard</h1>
+
+<div class="card-container">
+
+<div class="card">
+<h2>{{ critical_count }}</h2>
+<p>Critical Threats</p>
+</div>
+
+<div class="card">
+<h2>{{ ip_count }}</h2>
+<p>Malicious IPs</p>
+</div>
+
+<div class="card">
+<h2>{{ hash_count }}</h2>
+<p>Malware Hashes</p>
+</div>
+
+<div class="card">
+<h2>{{ email_count }}</h2>
+<p>Phishing Emails</p>
+</div>
+
+</div>
+
+<br>
+
+<div class="result-card">
+
+<h2>📡 Threat Feed</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Type</th>
+
+<th>Indicator</th>
+
+<th>Severity</th>
+
+<th>Source</th>
+
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for item in feeds %}
+
+<tr>
+
+<td>{{ item.id }}</td>
+
+<td>
+
+    {% if item.threat_type == "HASH" %}
+    
+    🦠 HASH
+    
+    {% elif item.threat_type == "EMAIL" %}
+    
+    📧 EMAIL
+    
+    {% elif item.threat_type == "IP" %}
+    
+    🌐 IP
+    
+    {% elif item.threat_type == "DOMAIN" %}
+    
+    🌍 DOMAIN
+    
+    {% else %}
+    
+    {{ item.threat_type }}
+    
+    {% endif %}
+    
+    </td>
+
+<td>{{ item.indicator }}</td>
+
+<td>
+
+{% if item.severity == "Critical" %}
+🔴 Critical
+
+{% elif item.severity == "High" %}
+🟠 High
+
+{% elif item.severity == "Medium" %}
+🟡 Medium
+
+{% else %}
+🟢 Low
+
+{% endif %}
+
+</td>
+
+<td>{{ item.source }}</td>
+
+<td>{{ item.created_at }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

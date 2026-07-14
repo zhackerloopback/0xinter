@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}
+YARA Scanner
+{% endblock %}
+
+{% block content %}
+
+<form method="POST"
+      enctype="multipart/form-data">
+
+<input type="hidden"
+       name="csrf_token"
+       value="{{ csrf_token() }}">
+
+<label for="file">
+    Select File
+</label>
+
+<input
+    id="file"
+    type="file"
+    name="file"
+    required>
+
+<button type="submit">
+    Scan File
+</button>
+
+{% if results %}
+
+<h2>Detection Results</h2>
+
+<table>
+
+    <tr>
+        <th>Rule</th>
+        <th>Description</th>
+    </tr>
+
+    {% for result in results %}
+
+    <tr>
+
+        <td>{{ result.rule }}</td>
+
+        <td>{{ result.description }}</td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+</form>
+
+{% endif %}
+
+{% endblock %}

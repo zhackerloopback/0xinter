@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}
+Cases
+{% endblock %}
+
+{% block content %}
+
+<h1>📁 Case Management</h1>
+
+<div class="quick-actions">
+
+<a href="/create_case"
+class="action-btn">
+
+➕ New Case
+
+</a>
+
+</div>
+
+<br>
+
+<div class="result-card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Title</th>
+
+<th>Target</th>
+
+<th>Module</th>
+
+<th>Priority</th>
+
+<th>Status</th>
+
+<th>Assigned To</th>
+
+<th>Created</th>
+
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% if rows %}
+
+{% for row in rows %}
+
+<tr>
+
+<td>{{ row.id }}</td>
+
+<td>{{ row.title }}</td>
+
+<td>{{ row.target }}</td>
+
+<td>{{ row.module }}</td>
+<td>
+
+    <a
+    href="/case/{{ row.id }}"
+    class="action-btn">
+    
+    👁 Open
+    
+    </a>
+    
+    </td>
+<td>
+
+{% if row.priority == "Critical" %}
+
+<span class="status-disabled">
+
+🔴 Critical
+
+</span>
+
+{% elif row.priority == "High" %}
+
+<span style="color:orange;">
+
+🟠 High
+
+</span>
+
+{% elif row.priority == "Medium" %}
+
+<span style="color:gold;">
+
+🟡 Medium
+
+</span>
+
+{% else %}
+
+<span class="status-active">
+
+🟢 Low
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{{ row.status }}
+
+</td>
+
+<td>
+
+{{ row.assigned_to }}
+
+</td>
+
+<td>
+
+{{ row.created_at }}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+{% else %}
+
+<tr>
+
+<td colspan="9">
+
+No Cases Found
+
+</td>
+
+</tr>
+
+{% endif %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

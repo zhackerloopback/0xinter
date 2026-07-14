@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}
+Alert Center
+{% endblock %}
+
+{% block content %}
+
+<h1>🚨 SOC Alert Center</h1>
+
+<div class="result-card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Title</th>
+<th>Description</th>
+<th>Severity</th>
+<th>Status</th>
+<th>Date</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for alert in alerts %}
+
+<tr>
+
+<td>{{ alert.id }}</td>
+
+<td>{{ alert.title }}</td>
+
+<td>{{ alert.description }}</td>
+
+<td>
+
+{% if alert.severity == "Critical" %}
+🔴 Critical
+
+{% elif alert.severity == "High" %}
+🟠 High
+
+{% elif alert.severity == "Medium" %}
+🟡 Medium
+
+{% else %}
+🟢 Low
+{% endif %}
+
+</td>
+
+<td>{{ alert.status }}</td>
+
+<td>{{ alert.created_at }}</td>
+<td>
+
+    <a
+    href="/ack_alert/{{ alert.id }}"
+    class="action-btn">
+    
+    ✅ Acknowledge
+    
+    </a>
+    
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

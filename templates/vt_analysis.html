@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VirusTotal Analysis</title>
+
+    {% if status != "completed" %}
+    <meta http-equiv="refresh" content="5">
+    {% endif %}
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .card{
+            border:1px solid #ddd;
+            padding:15px;
+            margin-bottom:15px;
+            border-radius:8px;
+        }
+
+        .good{
+            color:green;
+            font-weight:bold;
+        }
+
+        .bad{
+            color:red;
+            font-weight:bold;
+        }
+    </style>
+
+</head>
+<body>
+
+<h1>VirusTotal Analysis</h1>
+
+{% if data.data %}
+
+<div class="card">
+
+<h2>Scan Status</h2>
+
+<p>
+<b>Status:</b>
+{{ data.data.attributes.status }}
+</p>
+
+</div>
+
+{% if data.data.attributes.status == "completed" %}
+
+<div class="card">
+
+<h2>Detection Summary</h2>
+
+<p>
+<b>Malicious:</b>
+<span class="bad">
+{{ data.data.attributes.stats.malicious }}
+</span>
+</p>
+
+<p>
+<b>Suspicious:</b>
+{{ data.data.attributes.stats.suspicious }}
+</p>
+
+<p>
+<b>Undetected:</b>
+<span class="good">
+{{ data.data.attributes.stats.undetected }}
+</span>
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>File Information</h2>
+
+<p>
+<b>SHA256:</b><br>
+{{ data.meta.file_info.sha256 }}
+</p>
+
+<p>
+<b>MD5:</b><br>
+{{ data.meta.file_info.md5 }}
+</p>
+
+<p>
+<b>SHA1:</b><br>
+{{ data.meta.file_info.sha1 }}
+</p>
+
+<p>
+<b>Size:</b>
+{{ data.meta.file_info.size }} bytes
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Scan Verdict</h2>
+
+{% if data.data.attributes.stats.malicious == 0 %}
+
+<p class="good">
+No engine flagged this file as malicious.
+</p>
+
+{% else %}
+
+<p class="bad">
+Some engines flagged this file.
+</p>
+
+{% endif %}
+
+</div>
+
+<div class="card">
+
+<h2>Top Engine Results</h2>
+
+<table border="1" cellpadding="8">
+
+<tr>
+    <th>Engine</th>
+    <th>Category</th>
+</tr>
+
+{% for engine, result in data.data.attributes.results.items() %}
+
+<tr>
+    <td>{{ engine }}</td>
+    <td>{{ result.category }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+{% else %}
+
+<h3>Analysis Running...</h3>
+
+<p>
+Page will refresh automatically.
+</p>
+
+{% endif %}
+
+{% endif %}
+
+</body>
+</html>

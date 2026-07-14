@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}
+Admin Panel
+{% endblock %}
+
+{% block content %}
+
+<h1>Admin Panel</h1>
+
+<div class="card-container">
+
+<div class="card">
+
+<h2>Users</h2>
+
+<p>
+Manage Users
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Audit Logs</h2>
+
+<p>
+System Activity
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Investigations</h2>
+
+<p>
+View Reports
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Statistics</h2>
+
+<p>
+Dashboard Metrics
+</p>
+
+</div>
+
+</div>
+
+<br>
+
+<a href="/audit">
+
+<button>
+
+View Audit Logs
+
+</button>
+
+</a>
+
+<a href="/history">
+
+<button>
+
+View Investigations
+
+</button>
+
+</a>
+
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}
+Threat Hunting
+{% endblock %}
+
+{% block content %}
+
+<h1>🎯 Threat Hunting Center</h1>
+
+<div class="tool-card">
+
+<form method="POST">
+
+<input type="hidden"
+       name="csrf_token"
+       value="{{ csrf_token() }}">
+
+<select
+name="hunt_type">
+
+<option value="critical">
+Critical Threats
+</option>
+
+<option value="malware">
+Malware Hunt
+</option>
+
+<option value="phishing">
+Phishing Hunt
+</option>
+
+<option value="domain">
+Suspicious Domains
+</option>
+
+<option value="watchlist">
+Watchlist Matches
+</option>
+
+</select>
+
+<br><br>
+
+<button type="submit">
+
+🔍 Run Hunt
+
+</button>
+
+</form>
+
+</div>
+
+{% if hunt_results %}
+
+<div class="result-card">
+
+<h2>
+
+📡 Hunt Results
+
+</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Data</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+    {% for item in hunt_results %}
+    
+    <tr>
+    
+    <td>{{ item.id }}</td>
+    
+    <td>
+    
+    {% if item.indicator %}
+    {{ item.indicator }}
+    {% elif item.target %}
+    {{ item.target }}
+    {% else %}
+    No Data
+    {% endif %}
+    
+    </td>
+    
+    </tr>
+    
+    {% endfor %}
+    
+</tbody>
+
+</table>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

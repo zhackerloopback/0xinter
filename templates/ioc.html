@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}
+IOC Analyzer
+{% endblock %}
+
+{% block content %}
+
+<h1>IOC Analyzer</h1>
+
+<div class="tool-card">
+
+<form method="POST">
+
+    <input type="hidden"
+           name="csrf_token"
+           value="{{ csrf_token() }}">
+
+    <label for="indicator">
+        IOC
+    </label>
+
+    <input
+        type="text"
+        id="indicator"
+        name="indicator"
+        placeholder="IP, Domain, URL, Email, Hash"
+        required>
+
+    <button type="submit">
+        Analyze
+    </button>
+
+</form>
+
+</div>
+
+{% if result %}
+
+<div class="result-card">
+
+<h2>🚨 Threat Assessment</h2>
+
+<h3>
+
+Risk Level:
+
+{% if result.risk_level == "Critical" %}
+
+<span style="color:red;">
+🔴 Critical
+</span>
+
+{% elif result.risk_level == "High" %}
+
+<span style="color:orange;">
+🟠 High
+</span>
+
+{% elif result.risk_level == "Medium" %}
+
+<span style="color:gold;">
+🟡 Medium
+</span>
+
+{% else %}
+
+<span style="color:lime;">
+🟢 Low
+</span>
+
+{% endif %}
+
+</h3>
+
+<p>
+
+Threat Score:
+
+<strong>
+
+{{ result.threat_score }}/100
+
+</strong>
+
+</p>
+
+</div>
+
+{% endif %}
+
+{% if result %}
+
+<div class="result-card">
+
+    <h2>
+
+        🎯 MITRE ATT&CK
+        
+        </h2>
+        
+        <table>
+        
+        <tr>
+        
+        <td>Tactic</td>
+        
+        <td>{{ result.mitre.tactic }}</td>
+        
+        </tr>
+        
+        <tr>
+        
+        <td>Technique</td>
+        
+        <td>
+        
+        {{ result.mitre.technique_id }}
+        
+        -
+        
+        {{ result.mitre.technique_name }}
+        
+        </td>
+        
+        </tr>
+        
+        </table>
+
+<h2>IOC Report</h2>
+
+<table>
+
+<tr>
+    <td>Indicator</td>
+    <td>{{ result.indicator }}</td>
+</tr>
+
+<tr>
+    <td>Type</td>
+    <td>{{ result.type }}</td>
+</tr>
+
+</table>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

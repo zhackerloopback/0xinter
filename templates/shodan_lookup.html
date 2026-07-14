@@ -1,0 +1,510 @@
+{% extends "base.html" %}
+
+{% block title %}
+Shodan Intelligence
+{% endblock %}
+
+{% block content %}
+
+<h1>🌐 Shodan Intelligence</h1>
+
+<div class="tool-card">
+
+    <form method="POST">
+
+        <input
+        type="hidden"
+        name="csrf_token"
+        value="{{ csrf_token() }}">
+
+        <input
+        type="text"
+        name="ip"
+        placeholder="Enter IP Address"
+        required>
+
+        <button type="submit">
+
+            🔍 Lookup
+
+        </button>
+
+    </form>
+
+</div>
+
+{% if result %}
+
+    {% if result.get('error') %}
+
+    <div class="result-card">
+
+        <h3>❌ Error</h3>
+
+        <p>{{ result.error }}</p>
+
+    </div>
+
+    {% else %}
+
+    <div class="result-card">
+
+        <h2>🌐 Shodan Intelligence Report</h2>
+
+        <hr>
+
+        <h3>📌 Basic Information</h3>
+
+        <p><b>IP Address:</b> {{ result.ip }}</p>
+
+        <p><b>Organization:</b> {{ result.org }}</p>
+
+        <p><b>ISP:</b> {{ result.isp }}</p>
+
+        <p><b>ASN:</b> {{ result.asn }}</p>
+
+        <hr>
+
+        <h3>🌍 Geolocation</h3>
+
+        <p><b>Country:</b> {{ result.country }}</p>
+
+        <p><b>Country Code:</b> {{ result.country_code }}</p>
+
+        <p><b>City:</b> {{ result.city }}</p>
+
+        <p><b>Latitude:</b> {{ result.latitude }}</p>
+
+        <p><b>Longitude:</b> {{ result.longitude }}</p>
+
+        <hr>
+
+        <h3>🌐 DNS Information</h3>
+
+        <p><b>Hostname:</b> {{ result.hostname }}</p>
+
+        <p><b>Domains:</b> {{ result.domains }}</p>
+
+        <hr>
+
+        <h3>💻 System Information</h3>
+
+        <p><b>Operating System:</b> {{ result.os }}</p>
+
+        <p><b>Tags:</b> {{ result.tags }}</p>
+
+        <hr>
+
+        <h3>🔓 Open Ports</h3>
+
+        <ul>
+
+            {% for port in result.ports %}
+
+            <li>{{ port }}</li>
+
+            {% endfor %}
+
+        </ul>
+
+        <hr>
+
+        <h3>📡 Detected Services</h3>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Port</th>
+
+                    <th>Protocol</th>
+
+                    <th>Product</th>
+
+                    <th>Version</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for service in result.services %}
+
+                <tr>
+
+                    <td>{{ service.port }}</td>
+
+                    <td>{{ service.transport }}</td>
+
+                    <td>{{ service.product }}</td>
+
+                    <td>{{ service.version }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% if result.ssl %}
+
+        <hr>
+
+        <h3>🔒 SSL Certificate</h3>
+
+        <p>
+
+            <b>Subject:</b>
+
+            {{ result.ssl.subject }}
+
+        </p>
+
+        <p>
+
+            <b>Issuer:</b>
+
+            {{ result.ssl.issuer }}
+
+        </p>
+
+        <p>
+
+            <b>Expires:</b>
+
+            {{ result.ssl.expires }}
+
+        </p>
+
+        {% endif %}
+
+        {% if result.whois %}
+
+        <hr>
+
+        <h3>🌍 WHOIS Information</h3>
+
+        <p>
+        <b>Domain:</b>
+        {{ result.whois.domain_name }}
+        </p>
+
+        <p>
+        <b>Registrar:</b>
+        {{ result.whois.registrar }}
+        </p>
+
+        <p>
+        <b>Creation Date:</b>
+        {{ result.whois.creation_date }}
+        </p>
+
+        <p>
+        <b>Expiration Date:</b>
+        {{ result.whois.expiration_date }}
+        </p>
+
+        <p>
+        <b>Name Servers:</b>
+        {{ result.whois.name_servers }}
+        </p>
+
+        <p>
+        <b>Status:</b>
+        {{ result.whois.status }}
+        </p>
+
+        {% endif %}
+
+        <hr>
+
+        <h3>🕒 Last Seen</h3>
+
+        <p>{{ result.last_update }}</p>
+
+        <hr>
+
+        <h3>📊 Risk Assessment</h3>
+
+        <p>
+
+            <b>Risk Score:</b>
+
+            {{ result.risk_score }}/100
+
+        </p>
+
+        <p>
+
+            <b>Verdict:</b>
+
+            {{ result.verdict }}
+
+        </p>
+
+        <hr>
+
+        <details>
+
+            <summary>
+            
+            🔧 Raw Shodan Data
+            
+            </summary>
+            
+            <pre>
+            
+            {{ raw_data }}
+            
+            </pre>
+            
+        </details>
+            
+
+        <hr>
+
+        <h3>🚀 Quick Actions</h3>
+
+        <div class="quick-actions">
+
+        {% if result.domains %}
+
+        <a
+        href="/whois?target={{ result.ip }}"
+        class="action-btn">
+        
+        🌐 WHOIS
+        
+        </a>
+
+        <a
+        href="/whois?target={{ result.domains }}"
+        class="action-btn">
+
+        🌍 Domain WHOIS
+
+        </a>
+            
+        {% endif %}
+
+        <a
+        href="/virustotal/{{ result.ip }}"
+        class="action-btn">
+        
+        🦠 VirusTotal
+        
+        </a>
+
+        <a
+        href="/ioc?indicator={{ result.ip }}"
+        class="action-btn">
+        
+        🔗 IOC Correlation
+        
+        </a>
+
+        <a
+        href="/create_case_from_shodan/{{ result.ip }}"
+        class="action-btn">
+        
+        📁 Create Case
+        
+        </a>
+
+        <a
+        href="/shodan_report/{{ result.ip }}"
+        class="action-btn">
+        
+        📄 Export PDF
+        
+        </a>
+
+        <a target="_blank"
+        href="https://maps.google.com/?q={{ result.latitude }},{{ result.longitude }}"
+        class="action-btn">
+
+        🗺 View Location
+
+        </a>
+
+        </div>
+
+        <hr>
+
+        <h3>📊 Risk Score</h3>
+
+        <div class="progress">
+
+        <div
+        class="progress-bar"
+
+        style="width: {{ result.risk_score }}%;">
+
+        {{ result.risk_score }}%
+
+        </div>
+
+        </div>
+
+        <br>
+
+        <div class="card-container">
+
+        <div class="card">
+
+        <h2>
+
+        {{ result.ports|length }}
+
+        </h2>
+
+        <p>
+
+        🔓 Open Ports
+
+        </p>
+
+        </div>
+
+        <div class="card">
+
+        <h2>
+
+        {{ result.services|length }}
+
+        </h2>
+
+        <p>
+
+        📡 Services
+
+        </p>
+
+        </div>
+
+        <div class="card">
+
+        <h2>
+
+        {{ result.country }}
+
+        </h2>
+
+        <p>
+
+        🌍 Location
+
+        </p>
+
+        </div>
+
+        </div>
+
+        <hr>
+
+        <h3>🚨 Port Risk Analysis</h3>
+
+        <table>
+
+        <tr>
+
+        <th>Port</th>
+
+        <th>Risk</th>
+
+        </tr>
+
+        {% for service in result.services %}
+
+        <tr>
+
+        <td>
+
+        {{ service.port }}
+
+        </td>
+
+        <td>
+
+        {% if service.port == 445 %}
+
+        🔴 SMB Exposure
+
+        {% elif service.port == 3389 %}
+
+        🟠 RDP Access
+
+        {% elif service.port == 23 %}
+
+        🔴 Telnet Service
+
+        {% elif service.port == 21 %}
+
+        🟠 FTP Service
+
+        {% elif service.port == 22 %}
+
+        🟢 SSH Service
+
+        {% elif service.port == 80 %}
+
+        🟢 HTTP Service
+
+        {% elif service.port == 443 %}
+
+        🟢 HTTPS Service
+
+        {% elif service.port == 53 %}
+
+        🟢 DNS Service
+
+        {% else %}
+
+        ⚪ Unknown
+
+        {% endif %}
+
+        </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </table>
+
+        <hr>
+
+        <details>
+
+            <summary>
+            🔧 Raw Shodan Data
+            </summary>
+            
+            <pre style="
+            background:#111827;
+            color:#22c55e;
+            padding:15px;
+            border-radius:10px;
+            overflow:auto;
+            max-height:500px;
+            ">
+            
+            {{ raw_data }}
+            
+            </pre>
+            
+        </details>
+
+    <br>
+    </div>
+
+    {% endif %}
+
+{% endif %}
+
+{% endblock %}

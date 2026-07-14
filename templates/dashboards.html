@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}
+Custom Dashboards
+{% endblock %}
+
+{% block content %}
+
+<h1>📊 Dashboard Manager</h1>
+
+<div class="tool-card">
+
+<form method="POST">
+
+<input type="hidden"
+       name="csrf_token"
+       value="{{ csrf_token() }}">
+
+<select name="dashboard_type">
+
+<option value="SOC">
+SOC Dashboard
+</option>
+
+<option value="THREAT">
+Threat Intelligence
+</option>
+
+<option value="MALWARE">
+Malware Dashboard
+</option>
+
+<option value="PHISHING">
+Phishing Dashboard
+</option>
+
+<option value="HUNTING">
+Threat Hunting
+</option>
+
+</select>
+
+<br><br>
+
+<button type="submit">
+
+💾 Save Dashboard
+
+</button>
+
+</form>
+
+</div>
+
+{% if selected %}
+
+<div class="result-card">
+
+       <h2>🎯 Active Campaigns</h2>
+
+       <table>
+       
+       <tr>
+       
+       <th>Sender</th>
+       
+       <th>Country</th>
+       
+       <th>Threat Score</th>
+       
+       </tr>
+       
+       {% for campaign in campaigns %}
+       
+       <tr>
+       
+       <td>{{ campaign.sender }}</td>
+       
+       <td>{{ campaign.country }}</td>
+       
+       <td>{{ campaign.threat_score }}</td>
+       
+       </tr>
+       
+       {% endfor %}
+       
+       </table>
+
+<h2>
+
+Current Dashboard
+
+</h2>
+
+<p>
+
+{{ selected.dashboard_type }}
+
+</p>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

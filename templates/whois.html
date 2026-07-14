@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}
+WHOIS Lookup
+{% endblock %}
+
+{% block content %}
+
+<h1>WHOIS Lookup</h1>
+
+<div class="tool-card">
+
+<form method="POST">
+
+<input
+type="hidden"
+name="csrf_token"
+value="{{ csrf_token() }}">
+
+<input
+type="text"
+name="domain"
+placeholder="example.com"
+required>
+
+<button type="submit">
+
+Search
+
+</button>
+
+</form>
+
+</div>
+
+{% if result %}
+
+<div class="result-card">
+
+<h2>Results</h2>
+
+{% if result.error %}
+
+<p style="color:red;">
+{{ result.error }}
+</p>
+
+{% else %}
+
+<table>
+
+<tr>
+<td>Domain</td>
+<td>{{ result.domain_name }}</td>
+</tr>
+
+<tr>
+<td>Registrar</td>
+<td>{{ result.registrar }}</td>
+</tr>
+
+<tr>
+<td>Creation Date</td>
+<td>{{ result.creation_date }}</td>
+</tr>
+
+<tr>
+<td>Expiry Date</td>
+<td>{{ result.expiration_date }}</td>
+</tr>
+
+</table>
+
+{% endif %}
+
+</div>
+
+{% endif %}
+{% endblock %}

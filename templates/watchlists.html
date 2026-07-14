@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}
+Watchlists
+{% endblock %}
+
+{% block content %}
+
+<h1>🎯 Threat Watchlists</h1>
+
+<div class="tool-card">
+
+<form method="POST">
+
+<input type="hidden"
+       name="csrf_token"
+       value="{{ csrf_token() }}">
+
+<input
+type="text"
+name="indicator"
+placeholder="Indicator"
+required>
+
+<br><br>
+
+<select
+name="indicator_type">
+
+<option value="IP">
+IP Address
+</option>
+
+<option value="DOMAIN">
+Domain
+</option>
+
+<option value="EMAIL">
+Email
+</option>
+
+<option value="HASH">
+Hash
+</option>
+
+</select>
+
+<br><br>
+
+<select
+name="severity">
+
+<option value="Low">
+🟢 Low
+</option>
+
+<option value="Medium">
+🟡 Medium
+</option>
+
+<option value="High">
+🟠 High
+</option>
+
+<option value="Critical">
+🔴 Critical
+</option>
+
+</select>
+
+<br><br>
+
+<textarea
+name="notes"
+rows="4"
+placeholder="Notes..."></textarea>
+
+<br><br>
+
+<button type="submit">
+
+➕ Add Watchlist
+
+</button>
+
+</form>
+
+</div>
+
+<div class="result-card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Indicator</th>
+<th>Type</th>
+<th>Severity</th>
+<th>Created By</th>
+<th>Date</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for item in items %}
+
+<tr>
+
+<td>{{ item.id }}</td>
+
+<td>{{ item.indicator }}</td>
+
+<td>{{ item.indicator_type }}</td>
+
+<td>{{ item.severity }}</td>
+
+<td>{{ item.created_by }}</td>
+
+<td>{{ item.created_at }}</td>
+
+<td>
+
+<a
+href="/delete_watchlist/{{ item.id }}"
+class="delete-btn"
+onclick="return confirm('Delete watchlist item?')">
+
+🗑 Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

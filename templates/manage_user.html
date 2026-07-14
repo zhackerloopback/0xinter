@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}
+Manage User
+{% endblock %}
+
+{% block content %}
+
+<h1>Manage User</h1>
+
+<div class="result-card">
+
+<h2>{{ user.username }}</h2>
+
+<table>
+
+<tr>
+<td>Username</td>
+<td>{{ user.username }}</td>
+</tr>
+
+<tr>
+<td>Email</td>
+<td>{{ user.email }}</td>
+</tr>
+
+<tr>
+<td>Role</td>
+<td>{{ user.role }}</td>
+</tr>
+
+<tr>
+<td>Status</td>
+
+<td>
+
+{% if user.is_active %}
+
+<span class="status-active">
+
+Active
+
+</span>
+
+{% else %}
+
+<span class="status-disabled">
+
+Disabled
+
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>Last Login</td>
+
+<td>
+
+{{ user.last_login or "Never" }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>Failed Attempts</td>
+
+<td>
+
+{{ user.failed_attempts }}
+
+</td>
+
+</tr>
+
+</table>
+
+<br>
+
+<div class="action-panel">
+
+<a
+href="/make_admin/{{ user.id }}"
+class="action-btn">
+
+👑 Make Admin
+
+</a>
+
+<a
+href="/make_user/{{ user.id }}"
+class="action-btn">
+
+👤 Make User
+
+</a>
+
+<a
+href="/toggle_user/{{ user.id }}"
+class="action-btn">
+
+🔒 Enable / Disable
+
+</a>
+
+<a
+href="/reset_user/{{ user.id }}"
+class="action-btn">
+
+🔑 Reset Password
+
+</a>
+
+</div>
+
+</div>
+
+{% endblock %}

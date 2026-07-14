@@ -1,0 +1,384 @@
+{% extends "base.html" %}
+
+{% block title %}
+Case Details
+{% endblock %}
+
+{% block content %}
+
+<h1>📁 Case Details</h1>
+
+<div class="result-card">
+<p>Total Evidence: {{ evidence|length }}</p>
+<table>
+
+<tr>
+<td><b>ID</b></td>
+<td>{{ case.id }}</td>
+</tr>
+
+<tr>
+<td><b>Title</b></td>
+<td>{{ case.title }}</td>
+</tr>
+
+<tr>
+<td><b>Target</b></td>
+<td>{{ case.target }}</td>
+</tr>
+
+<tr>
+<td><b>Module</b></td>
+<td>{{ case.module }}</td>
+</tr>
+
+<tr>
+<td><b>Priority</b></td>
+<td>{{ case.priority }}</td>
+</tr>
+
+<tr>
+<td><b>Status</b></td>
+<td>{{ case.status }}</td>
+</tr>
+
+<tr>
+<td><b>Assigned To</b></td>
+<td>{{ case.assigned_to }}</td>
+</tr>
+
+<tr>
+<td><b>Created</b></td>
+<td>{{ case.created_at }}</td>
+</tr>
+
+</table>
+
+</div>
+
+<br>
+
+<div class="result-card">
+
+<h2>📝 Notes</h2>
+
+<pre>{{ case.notes }}</pre>
+
+</div>
+
+<br>
+<hr>
+
+<h2>📎 Evidence Upload</h2>
+
+<form
+method="POST"
+action="/upload_evidence/{{ case.id }}"
+enctype="multipart/form-data">
+
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="{{ csrf_token() }}">
+
+    <input
+        type="file"
+        name="file"
+        required>
+
+    <button type="submit">
+        Upload Evidence
+    </button>
+
+</form>
+
+<hr>
+
+<h2>📂 Attached Evidence</h2>
+
+<p>Total Evidence: {{ evidence|length }}</p>
+
+<div class="result-card">
+
+<table>
+
+<thead>
+<tr>
+<th>File</th>
+<th>Uploaded By</th>
+<th>Date</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for item in evidence %}
+
+<tr>
+
+<td>
+{{ item['filename'] }}
+</td>
+
+<td>
+{{ item['uploaded_by'] or 'Unknown' }}
+</td>
+
+<td>
+{{ item['uploaded_at'] }}
+</td>
+
+</tr>
+
+{% else %}
+
+<tr>
+<td colspan="3">
+No evidence found
+</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+<hr>
+
+<h2>🔗 Link Investigation</h2>
+
+<form method="POST" action="/link_investigation/{{ case.id }}">
+
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+<select name="investigation_id" required>
+
+{% for inv in investigations %}
+
+<option value="{{ inv[0] }}">
+
+#{{ inv[0] }}
+
+|
+
+{{ inv[1] }}
+
+|
+
+{{ inv[2] }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+<br><br>
+
+<button type="submit">
+
+🔗 Link Investigation
+
+</button>
+
+</form>
+
+<hr>
+
+<h2>📂 Linked Investigations</h2>
+
+<div class="result-card">
+
+<table>
+
+<tr>
+
+<th>ID</th>
+
+<th>Module</th>
+
+<th>Target</th>
+
+<th>Time</th>
+
+<th>View</th>
+
+</tr>
+
+{% for inv in linked_investigations %}
+
+<tr>
+
+<td>{{ inv[0] }}</td>
+
+<td>{{ inv[1] }}</td>
+
+<td>{{ inv[2] }}</td>
+
+<td>{{ inv[3] }}</td>
+
+<td>
+
+<a href="/investigation/{{ inv[0] }}" class="action-btn">
+
+👁 Open
+
+</a>
+
+<a
+href="/ioc_correlation?ioc={{ case.target }}"
+class="action-btn">
+
+🔗 Correlate IOC
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+<hr>
+
+<h2>💬 Comments</h2>
+
+<form method="POST" action="/add_case_comment/{{ case.id }}">
+
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+<textarea name="comment" rows="4" required></textarea>
+
+<br><br>
+
+<button type="submit">
+
+💬 Add Comment
+
+</button>
+
+</form>
+
+<br>
+
+{% for comment in comments %}
+
+<div class="result-card">
+
+<b>{{ comment[2] }}</b>
+
+<small>
+
+{{ comment[4] }}
+
+</small>
+
+<hr>
+
+{{ comment[3] }}
+
+</div>
+
+<br>
+
+{% endfor %}
+
+<hr>
+
+<h2>📜 Timeline</h2>
+
+<div class="result-card">
+
+<table>
+
+<tr>
+
+<th>User</th>
+
+<th>Action</th>
+
+<th>Time</th>
+
+</tr>
+
+{% for item in timeline %}
+
+<tr>
+
+<td>{{ item[2] }}</td>
+
+<td>{{ item[3] }}</td>
+
+<td>{{ item[4] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+<div class="quick-actions">
+
+<a href="/update_case_status/{{ case.id }}/Open"
+class="action-btn">
+
+🟢 Open
+
+</a>
+
+<a href="/update_case_status/{{ case.id }}/In-Progress"
+class="action-btn">
+
+🟡 In Progress
+
+</a>
+
+<a href="/update_case_status/{{ case.id }}/Resolved"
+class="action-btn">
+
+🔵 Resolved
+
+</a>
+
+<a href="/update_case_status/{{ case.id }}/Closed"
+class="action-btn">
+
+⚫ Closed
+
+</a>
+
+<a href="/delete_case/{{ case.id }}"
+class="delete-btn"
+onclick="return confirm('Delete this case?')">
+
+🗑 Delete
+
+</a>
+
+<a
+href="/case_report/{{ case.id }}"
+class="action-btn">
+
+📄 Case Report
+
+</a>
+
+<a href="/history" class="action-btn">
+
+⬅ Back
+
+</a>
+
+
+</div>
+
+{% endblock %}
